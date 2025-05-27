@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Git push with automatic upstream setting and PR prompt
+# Pushes current branch and sets upstream if not already set, then prompts to open PR
+
+git push --set-upstream origin $(git branch --show-current)
+
+echo ""
+read -p "Open a pull request? (y/n): " open_pr
+
+if [ "$open_pr" = "y" ] || [ "$open_pr" = "Y" ]; then
+    # Open PR in browser using GitHub CLI if available, otherwise show URL
+    if command -v gh &> /dev/null; then
+        gh pr create --web
+    else
+        repo_url=$(git remote get-url origin | sed 's/\.git$//' | sed 's/git@github\.com:/https:\/\/github\.com\//')
+        branch_name=$(git branch --show-current)
+        echo "Open PR at: ${repo_url}/compare/${branch_name}?expand=1"
+    fi
+fi

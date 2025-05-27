@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Git branch creator with type selection
+# Creates new branch with conventional naming: type/jake/name or type/jake/uuid
+
+echo "Branch type:"
+echo "1) fix"
+echo "2) feat"
+echo "3) nit"
+read -p "Select (1-3): " choice
+
+case $choice in
+    1) type="fix" ;;
+    2) type="feat" ;;
+    3) type="nit" ;;
+    *) echo "Invalid choice"; exit 1 ;;
+esac
+
+read -p "Branch name (leave empty for random): " name
+
+if [ -z "$name" ]; then
+    # Generate random UUID-like string (8 chars)
+    name=$(openssl rand -hex 4)
+else
+    # Replace spaces with hyphens
+    name=$(echo "$name" | tr ' ' '-')
+fi
+
+branch_name="jake/${type}/${name}"
+git checkout -b "$branch_name"
+echo "Created and switched to branch: $branch_name"
