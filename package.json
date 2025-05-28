@@ -1,0 +1,11 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Building project...'",
+    "test": "echo 'Running tests...'",
+    "dev": "echo 'Starting development server...'",
+    "lint": "echo 'Linting code...'",
+    "register": "./scripts/register-commands.sh"
+  }
+}
