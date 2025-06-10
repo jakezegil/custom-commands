@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    echo "Usage: gbc"
+    echo "Description: Lists the current git branch"
+    exit 0
+fi
+
+git branch --show-current
