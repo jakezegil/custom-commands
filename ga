@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# gita add: Add files to git staging area with beautiful, clear feedback
+# If no files are specified, defaults to 'git add .'
+# Usage: gita add [file ...] | --help
+
+if ! command -v git &> /dev/null; then
+    echo "git is not installed." >&2
+    exit 1
+fi
+
+if [[ "$1" == "--help" ]]; then
+    echo "Usage: gita add [file ...]"
+    echo "Adds files to git staging area. If no files are specified, stages all changes (git add .)."
+    exit 0
+fi
+
+if [ $# -eq 0 ]; then
+    files="."
+    msg="(all changes)"
+else
+    files="$@"
+    msg="$*"
+fi
+
+git add $files
+if [ $? -eq 0 ]; then
+    echo -e "\033[1;32m✔ Successfully staged:\033[0m $msg"
+else
+    echo -e "\033[1;31m✗ Failed to add files.\033[0m"
+fi
