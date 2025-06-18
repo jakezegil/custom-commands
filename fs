@@ -12,20 +12,20 @@ if ! command -v rg &> /dev/null; then
     exit 1
 fi
 
-# Start with empty query, let user type immediately in fzf
-rg --vimgrep --color=never --max-columns=200 "" . \
+# Start with empty query, let user type immediately in fzf (case-insensitive search)
+rg --vimgrep --color=never --max-columns=200 -i "" . \
 | fzf --ansi --delimiter : \
 --with-nth=1,2,4 \
 --preview 'bat --style=numbers --color=always --highlight-line {2} {1} 2>/dev/null || tail -n +{2} {1} | head -n 20' \
 --preview-window=up:wrap:60% \
---bind "change:reload:rg --vimgrep --color=never --max-columns=200 {q} . || true" \
---prompt="Match> " \
---header="Navigate with ↑↓, enter to open, type to refine. Esc to quit." \
+--bind "change:reload:rg --vimgrep --color=never --max-columns=200 -i {q} . || true" \
+--prompt="Match (insensitive)> " \
+--header="Navigate with ↑↓, enter to open, type to refine (case-insensitive). Esc to quit." \
 --height=80% --layout=reverse \
 | while IFS=: read -r file line col match; do
-    if [ -n "$file" ] && [ -n "$line" ]; then
-        # Open file at line and column 1 using cursor -r -g file:line
-        cursor -r -g "$file:$line"
+    if [ -n "$file" ] && [ -n "$line" ] && [ -n "$col" ]; then
+        # Open file at line and column using cursor -r -g file:line:col
+        cursor -r -g "$file:$line:$col"
     fi
 done
 
