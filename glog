@@ -1,0 +1,12 @@
+git log --oneline --graph --color=always |
+fzf --no-sort --reverse --ansi \
+--preview='echo {} | awk "{print \$2}" | xargs git show --color=always --stat' \
+--preview-window=right:60%:wrap \
+--bind='ctrl-d:preview-page-down,ctrl-u:preview-page-up' \
+--bind='ctrl-f:preview-page-down,ctrl-b:preview-page-up' \
+--bind='j:down,k:up' \
+--bind='ctrl-j:preview-down,ctrl-k:preview-up' \
+--bind='ctrl-r:refresh-preview' \
+--bind='f5:refresh-preview' \
+--header='↑↓: navigate | Enter: show | Ctrl+r/F5: refresh preview | Ctrl+f/b: scroll preview' |
+awk '{print $2}' | xargs git show
