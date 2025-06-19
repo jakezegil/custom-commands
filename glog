@@ -1,14 +1,20 @@
 
 glog() {
-  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    cat <<EOF
+  # Parse options
+  local file_filter=""
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h|--help)
+        cat <<EOF
 glog: Beautiful interactive git log browser
 
 Usage:
-  glog [<git-log-args>]
+  glog [-f <file-or-folder>] [<git-log-args>]
 
 Options:
   -h, --help    Show this help message and exit
+  -f <path>     Only show commits affecting the given file or folder
 
 Key Bindings:
   Ctrl-/        Toggle preview
@@ -21,12 +27,33 @@ Key Bindings:
 
 Description:
   Fuzzy-search, preview, and copy git commits interactively.
+  Use -f to restrict to a file or folder.
 EOF
-    return 0
+        return 0
+        ;;
+      -f)
+        shift
+        if [[ -z "$1" ]]; then
+          echo "glog: -f requires a file or folder argument" >&2
+          return 1
+        fi
+        file_filter="$1"
+        shift
+        ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  local log_args=("${args[@]}")
+  if [[ -n "$file_filter" ]]; then
+    log_args+=("--" "$file_filter")
   fi
 
   git log --graph --color=always \
-    --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+    --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "${log_args[@]}" |
   fzf --ansi --reverse --tiebreak=begin,index \
     --algo=v2 \
     --exact \
@@ -49,5 +76,6 @@ FZF-EOF"
 }
 # UX: Uses --algo=v2 and --exact for more relevant search results. Tiebreak prioritizes matches at the start.
 # UX: Ctrl-Y copies 'git checkout <commit>' for the selected commit to clipboard (macOS pbcopy). Consider xclip for Linux.
+# UX: -f option restricts log to a file/folder, making it easy to browse history for a path.
 
 glog "$@"
