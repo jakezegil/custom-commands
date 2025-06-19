@@ -1,12 +1,53 @@
-git log --oneline --graph --color=always |
-fzf --no-sort --reverse --ansi \
---preview='echo {} | awk "{print \$2}" | xargs git show --color=always --stat' \
---preview-window=right:60%:wrap \
---bind='ctrl-d:preview-page-down,ctrl-u:preview-page-up' \
---bind='ctrl-f:preview-page-down,ctrl-b:preview-page-up' \
---bind='j:down,k:up' \
---bind='ctrl-j:preview-down,ctrl-k:preview-up' \
---bind='ctrl-r:refresh-preview' \
---bind='f5:refresh-preview' \
---header='↑↓: navigate | Enter: show | Ctrl+r/F5: refresh preview | Ctrl+f/b: scroll preview' |
-awk '{print $2}' | xargs git show
+
+glog() {
+  if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    cat <<EOF
+glog: Beautiful interactive git log browser
+
+Usage:
+  glog [<git-log-args>]
+
+Options:
+  -h, --help    Show this help message and exit
+
+Key Bindings:
+  Ctrl-/        Toggle preview
+  Ctrl-S        Toggle sort
+  Ctrl-F        Focus filter (expand preview)
+  Ctrl-L        Clear query
+  Ctrl-U/D      Half page up/down
+  Ctrl-Y        Copy 'git checkout <commit>' to clipboard
+  Enter         Show commit details in pager
+
+Description:
+  Fuzzy-search, preview, and copy git commits interactively.
+EOF
+    return 0
+  fi
+
+  git log --graph --color=always \
+    --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --reverse --tiebreak=begin,index \
+    --algo=v2 \
+    --exact \
+    --bind=ctrl-s:toggle-sort \
+    --bind='ctrl-f:change-preview-window(right,80%:wrap)+change-prompt(🔍 Filter commits > )' \
+    --bind='ctrl-l:clear-query' \
+    --bind='ctrl-u:half-page-up,ctrl-d:half-page-down' \
+    --bind='ctrl-/:toggle-preview' \
+    --bind='ctrl-y:execute-silent(echo git checkout $(echo {} | grep -o "[a-f0-9]\{7\}" | head -1) | pbcopy)+preview:echo "Copied: git checkout <commit>"' \
+    --layout=reverse \
+    --prompt='🔍 Search commits > ' \
+    --header='Type to fuzzy-search commits. Ctrl-/: toggle preview, Ctrl-S: sort, Ctrl-F: focus filter, Ctrl-L: clear, Ctrl-Y: copy checkout command, Enter: show details' \
+    --preview="echo {} | grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % git show --color=always --stat %" \
+    --preview-window=right:60%:wrap \
+    --bind "ctrl-m:execute:
+      (grep -o '[a-f0-9]\{7\}' | head -1 |
+      xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+      {}
+FZF-EOF"
+}
+# UX: Uses --algo=v2 and --exact for more relevant search results. Tiebreak prioritizes matches at the start.
+# UX: Ctrl-Y copies 'git checkout <commit>' for the selected commit to clipboard (macOS pbcopy). Consider xclip for Linux.
+
+glog "$@"
