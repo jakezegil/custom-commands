@@ -1,0 +1,14 @@
+\033[1;32mgbc\033[0m - Show current git branch
+
+\033[1;34mUSAGE:\033[0m
+gbc
+gbc -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Lists the current git branch name.
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgbc\033[0m Show current branch
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git

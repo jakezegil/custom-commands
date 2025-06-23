@@ -1,0 +1,17 @@
+\033[1;32mga\033[0m - Git add with beautiful feedback
+
+\033[1;34mUSAGE:\033[0m
+ga [file ...]
+ga -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Adds files to git staging area with beautiful, clear feedback.
+If no files are specified, defaults to 'git add .' (stages all changes).
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mga\033[0m Stage all changes
+\033[1;33mga file1.js file2.js\033[0m Stage specific files
+\033[1;33mga src/\033[0m Stage entire directory
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git

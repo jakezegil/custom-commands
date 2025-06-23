@@ -1,0 +1,31 @@
+\033[1;32mgsa\033[0m - Interactive git stash apply browser
+
+\033[1;34mUSAGE:\033[0m
+gsa
+gsa -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Beautiful interactive interface for browsing and applying git stashes.
+Uses fzf to provide fuzzy search through stash list with live preview
+of stash contents.
+
+\033[1;34mFEATURES:\033[0m
+• Interactive stash selection with fuzzy search
+• Live preview of stash contents and statistics
+• One-click stash application
+• Copy stash apply commands to clipboard
+
+\033[1;34mKEYBINDINGS:\033[0m
+Enter Apply selected stash
+Ctrl-/ Toggle preview panel
+Ctrl-Y Copy 'git stash apply <stash>' to clipboard
+Type Fuzzy search through stash messages
+Esc Cancel without applying
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgsa\033[0m Browse and apply stashes
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• fzf (fuzzy finder)
+• pbcopy (macOS) or xclip (Linux) for clipboard functionality

@@ -1,0 +1,25 @@
+\033[1;32mgap\033[0m - Stage, commit, and push with PR prompt in one flow
+
+\033[1;34mUSAGE:\033[0m
+gap <commit message>
+gap -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Combines git add, commit, and push operations in a single command with
+beautiful feedback. Stages all changes, commits with the provided message,
+pushes to remote, and prompts to create a pull request.
+
+This is a convenience command that executes:
+1. git add . (stage all changes)
+2. git commit -m "<commit message>"
+3. git push --set-upstream origin <current-branch>
+4. Prompt to open pull request
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgap "Add new feature"\033[0m Stage, commit, and push
+\033[1;33mgap "Fix bug in auth"\033[0m With descriptive message
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• Current directory must be a git repository
+• GitHub CLI (gh) recommended for PR creation

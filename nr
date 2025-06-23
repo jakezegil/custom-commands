@@ -46,40 +46,11 @@ fi
 
 # Show help documentation
 _nr_help() {
-    cat << 'EOF'
-nr - npm run with intelligent autocompletion
-
-USAGE:
-    nr [script_name] [args...]
-    nr -h, --help
-
-DESCRIPTION:
-    A smart wrapper for npm run that provides tab autocompletion for scripts
-    defined in package.json. Automatically finds package.json in current or
-    parent directories.
-
-OPTIONS:
-    -h, --help    Show this help message
-
-EXAMPLES:
-    nr                  # List all available scripts
-    nr build            # Run the 'build' script
-    nr test -- --watch  # Run 'test' script with additional arguments
-
-FEATURES:
-    • Tab autocompletion for script names
-    • Searches for package.json in current and parent directories
-    • Works from any subdirectory of your project
-    • Passes through additional arguments to npm run
-
-REQUIREMENTS:
-    • jq (optional, for better script listing)
-    • bash completion support
-
-INSTALLATION:
-    Add to your shell profile (~/.bashrc, ~/.zshrc):
-    source /path/to/nr
-EOF
+    if [[ -f "$(dirname "${BASH_SOURCE[0]}")/nr.help" ]]; then
+        echo -e "$(cat "$(dirname "${BASH_SOURCE[0]}")/nr.help")"
+    else
+        echo "Help file not found"
+    fi
 }
 
 # Main nr function

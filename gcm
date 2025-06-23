@@ -1,29 +1,13 @@
 #!/bin/bash
 
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-  cat <<'EOF'
-gcm - Git commit with message
-
-USAGE:
-    gcm <commit message>
-    gcm --help|-h
-
-DESCRIPTION:
-    Commits staged changes with the provided commit message.
-    Beautiful, minimal feedback for fast workflows.
-
-EXAMPLES:
-    gcm "Fix bug in login"
-    gcm Add new feature
-
-REQUIREMENTS:
-    • git
-    • Staged changes to commit
-
-EOF
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$0")/gcm.help" ]]; then
+        echo -e "$(cat "$(dirname "$0")/gcm.help")"
+    else
+        echo "Help file not found"
+    fi
     exit 0
 fi
-
 
 if [ $# -eq 0 ]; then
     echo "Usage: gcm <commit message>"

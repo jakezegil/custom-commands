@@ -2,31 +2,12 @@
 
 # gitp - Git push with automatic upstream and PR prompt
 
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    cat <<'EOF'
-gitp - Push current branch and prompt to open a pull request
-
-USAGE:
-    gitp [--help|-h]
-
-DESCRIPTION:
-    Pushes the current branch to origin with --set-upstream if needed,
-    then prompts to open a pull request in your browser.
-
-FEATURES:
-    • Automatic upstream setup for new branches
-    • Interactive prompt to open a PR (uses GitHub CLI if available)
-    • Beautiful, minimal feedback
-
-REQUIREMENTS:
-    • git
-    • GitHub CLI (gh) for best experience (optional)
-
-EXAMPLES:
-    gitp           # Push and prompt for PR
-    gitp --help    # Show this help
-
-EOF
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$0")/gitp.help" ]]; then
+        echo -e "$(cat "$(dirname "$0")/gitp.help")"
+    else
+        echo "Help file not found"
+    fi
     exit 0
 fi
 

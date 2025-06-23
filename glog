@@ -7,29 +7,11 @@ glog() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -h|--help)
-        cat <<EOF
-glog: Beautiful interactive git log browser
-
-Usage:
-  glog [-f <file-or-folder>] [<git-log-args>]
-
-Options:
-  -h, --help    Show this help message and exit
-  -f <path>     Only show commits affecting the given file or folder
-
-Key Bindings:
-  Ctrl-/        Toggle preview
-  Ctrl-S        Toggle sort
-  Ctrl-F        Focus filter (expand preview)
-  Ctrl-L        Clear query
-  Ctrl-U/D      Half page up/down
-  Ctrl-Y        Copy 'git checkout <commit>' to clipboard
-  Enter         Show commit details in pager
-
-Description:
-  Fuzzy-search, preview, and copy git commits interactively.
-  Use -f to restrict to a file or folder.
-EOF
+        if [[ -f "$(dirname "$0")/glog.help" ]]; then
+            echo -e "$(cat "$(dirname "$0")/glog.help")"
+        else
+            echo "Help file not found"
+        fi
         return 0
         ;;
       -f)

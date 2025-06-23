@@ -5,42 +5,12 @@
 # - Instantly start searching for a string in the repo.
 # - Navigate with up/down, see file+preview, press enter to jump to match in less.
 
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    cat << 'EOF'
-fs - Interactive fuzzy file+text search with preview and jump
-
-USAGE:
-    fs [--help|-h]
-
-DESCRIPTION:
-    Interactive fuzzy file and text search with live preview. Searches through
-    all files in the repository using ripgrep and displays results with fzf.
-    Navigate with arrow keys, see file preview, press enter to jump to match
-    in Cursor editor.
-
-FEATURES:
-    • Real-time fuzzy search through file contents
-    • Live preview with syntax highlighting
-    • Case-insensitive search
-    • Jump directly to match location in Cursor
-    • Supports all file types in repository
-
-REQUIREMENTS:
-    • fzf (fuzzy finder)
-    • ripgrep (rg)
-    • bat (for syntax highlighting, optional)
-    • cursor (for opening files)
-
-KEYBINDINGS:
-    • ↑↓ or j/k: Navigate results
-    • Enter: Open file at match location
-    • Esc: Quit
-    • Type: Refine search query
-
-EXAMPLES:
-    fs                  # Start interactive search
-    fs --help           # Show this help
-EOF
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$0")/fs.help" ]]; then
+        echo -e "$(cat "$(dirname "$0")/fs.help")"
+    else
+        echo "Help file not found"
+    fi
     exit 0
 fi
 

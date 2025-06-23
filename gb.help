@@ -1,0 +1,33 @@
+\033[1;32mgb\033[0m - Interactive git branch creator with conventional naming
+
+\033[1;34mUSAGE:\033[0m
+gb
+gb -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Interactive tool for creating new git branches with conventional naming
+patterns. Prompts for branch type and name, creating branches in the
+format: jake/<type>/<name>
+
+\033[1;34mBRANCH TYPES:\033[0m
+1. fix For bug fixes
+2. feat For new features
+3. nit For small improvements/nitpicks
+
+\033[1;34mNAMING PATTERNS:\033[0m
+jake/fix/user-auth-bug Named branch
+jake/feat/new-dashboard Named branch
+jake/nit/a1b2c3d4 Auto-generated UUID
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgb\033[0m Start interactive branch creation
+
+\033[1;34mFEATURES:\033[0m
+• Interactive type selection
+• Automatic name generation if none provided
+• Consistent naming convention
+• Automatic checkout to new branch
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• openssl (for UUID generation)

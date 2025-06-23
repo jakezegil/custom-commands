@@ -1,0 +1,21 @@
+\033[1;32mgitp\033[0m - Push current branch and prompt to open a pull request
+
+\033[1;34mUSAGE:\033[0m
+gitp
+gitp -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Pushes the current branch to origin with --set-upstream if needed,
+then prompts to open a pull request in your browser.
+
+\033[1;34mFEATURES:\033[0m
+• Automatic upstream setup for new branches
+• Interactive prompt to open a PR (uses GitHub CLI if available)
+• Beautiful, minimal feedback
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgitp\033[0m Push and prompt for PR
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• GitHub CLI (gh) for best experience (optional)

@@ -3,42 +3,12 @@
 # Git branch creator with type selection
 # Creates new branch with conventional naming: type/jake/name or type/jake/uuid
 
-if [[ "$1" == "--help" || "$1" == "-h" ]]; then
-    cat << 'EOF'
-gb - Interactive git branch creator with conventional naming
-
-USAGE:
-    gb [--help|-h]
-
-DESCRIPTION:
-    Interactive tool for creating new git branches with conventional naming
-    patterns. Prompts for branch type and name, creating branches in the
-    format: jake/<type>/<name>
-
-BRANCH TYPES:
-    1. fix    - For bug fixes
-    2. feat   - For new features
-    3. nit    - For small improvements/nitpicks
-
-NAMING PATTERNS:
-    jake/fix/user-auth-bug          # Named branch
-    jake/feat/new-dashboard         # Named branch
-    jake/nit/a1b2c3d4               # Auto-generated UUID
-
-EXAMPLES:
-    gb                              # Start interactive branch creation
-    gb --help                       # Show this help
-
-FEATURES:
-    • Interactive type selection
-    • Automatic name generation if none provided
-    • Consistent naming convention
-    • Automatic checkout to new branch
-
-REQUIREMENTS:
-    • git
-    • openssl (for UUID generation)
-EOF
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$0")/gb.help" ]]; then
+        echo -e "$(cat "$(dirname "$0")/gb.help")"
+    else
+        echo "Help file not found"
+    fi
     exit 0
 fi
 

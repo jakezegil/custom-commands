@@ -1,0 +1,17 @@
+\033[1;32mgcm\033[0m - Git commit with message
+
+\033[1;34mUSAGE:\033[0m
+gcm <commit message>
+gcm -h
+
+\033[1;34mDESCRIPTION:\033[0m
+Commits staged changes with the provided commit message.
+Beautiful, minimal feedback for fast workflows.
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mgcm "Fix bug in login"\033[0m Commit with message
+\033[1;33mgcm "Add new feature"\033[0m Another example
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• Staged changes to commit

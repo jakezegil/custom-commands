@@ -1,0 +1,33 @@
+\033[1;32mfs\033[0m - Interactive fuzzy file+text search with preview and jump
+
+\033[1;34mUSAGE:\033[0m
+fs [--help|-h]
+
+\033[1;34mDESCRIPTION:\033[0m
+Interactive fuzzy file and text search with live preview. Searches through
+all files in the repository using ripgrep and displays results with fzf.
+Navigate with arrow keys, see file preview, press enter to jump to match
+in Cursor editor.
+
+\033[1;34mFEATURES:\033[0m
+• Real-time fuzzy search through file contents
+• Live preview with syntax highlighting
+• Case-insensitive search
+• Jump directly to match location in Cursor
+• Supports all file types in repository
+
+\033[1;34mKEYBINDINGS:\033[0m
+↑↓ or j/k Navigate results
+Enter Open file at match location
+Esc Quit
+Type Refine search query
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mfs\033[0m Start interactive search
+\033[1;33mfs --help\033[0m Show this help
+
+\033[1;34mREQUIREMENTS:\033[0m
+• fzf (fuzzy finder)
+• ripgrep (rg)
+• bat (for syntax highlighting, optional)
+• cursor (for opening files)

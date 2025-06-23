@@ -1,0 +1,32 @@
+\033[1;32mnr\033[0m - npm run with intelligent autocompletion
+
+\033[1;34mUSAGE:\033[0m
+nr [script_name] [args...]
+nr -h
+
+\033[1;34mDESCRIPTION:\033[0m
+A smart wrapper for npm run that provides tab autocompletion for scripts
+defined in package.json. Automatically finds package.json in current or
+parent directories.
+
+\033[1;34mOPTIONS:\033[0m
+-h, --help Show this help message
+
+\033[1;34mFEATURES:\033[0m
+• Tab autocompletion for script names
+• Searches for package.json in current and parent directories
+• Works from any subdirectory of your project
+• Passes through additional arguments to npm run
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mnr\033[0m List all available scripts
+\033[1;33mnr build\033[0m Run the 'build' script
+\033[1;33mnr test -- --watch\033[0m Run 'test' script with additional arguments
+
+\033[1;34mINSTALLATION:\033[0m
+Add to your shell profile (~/.bashrc, ~/.zshrc):
+source /path/to/nr
+
+\033[1;34mREQUIREMENTS:\033[0m
+• jq (optional, for better script listing)
+• bash completion support

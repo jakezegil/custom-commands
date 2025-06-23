@@ -1,0 +1,32 @@
+\033[1;32mglog\033[0m - Beautiful interactive git log browser
+
+\033[1;34mUSAGE:\033[0m
+glog [-f <file-or-folder>] [<git-log-args>]
+glog -h
+
+\033[1;34mOPTIONS:\033[0m
+-h, --help Show this help message and exit
+-f <path> Only show commits affecting the given file or folder
+
+\033[1;34mDESCRIPTION:\033[0m
+Fuzzy-search, preview, and copy git commits interactively.
+Use -f to restrict to a file or folder.
+
+\033[1;34mKEY BINDINGS:\033[0m
+Ctrl-/ Toggle preview
+Ctrl-S Toggle sort
+Ctrl-F Focus filter (expand preview)
+Ctrl-L Clear query
+Ctrl-U/D Half page up/down
+Ctrl-Y Copy 'git checkout <commit>' to clipboard
+Enter Show commit details in pager
+
+\033[1;34mEXAMPLES:\033[0m
+\033[1;33mglog\033[0m Browse all commits
+\033[1;33mglog -f src/app.js\033[0m Show commits for specific file
+\033[1;33mglog -f components/\033[0m Show commits for directory
+
+\033[1;34mREQUIREMENTS:\033[0m
+• git
+• fzf (fuzzy finder)
+• pbcopy (macOS) or xclip (Linux) for clipboard functionality
