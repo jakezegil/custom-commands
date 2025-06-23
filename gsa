@@ -1,6 +1,44 @@
 #!/bin/bash
 
 gsa() {
+    # Handle help flags
+    if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+        cat << 'EOF'
+gsa - Interactive git stash apply browser
+
+USAGE:
+    gsa [--help|-h]
+
+DESCRIPTION:
+    Beautiful interactive interface for browsing and applying git stashes.
+    Uses fzf to provide fuzzy search through stash list with live preview
+    of stash contents.
+
+FEATURES:
+    • Interactive stash selection with fuzzy search
+    • Live preview of stash contents and statistics
+    • One-click stash application
+    • Copy stash apply commands to clipboard
+
+KEYBINDINGS:
+    • Enter: Apply selected stash
+    • Ctrl-/: Toggle preview panel
+    • Ctrl-Y: Copy 'git stash apply <stash>' to clipboard
+    • Type: Fuzzy search through stash messages
+    • Esc: Cancel without applying
+
+EXAMPLES:
+    gsa                             # Browse and apply stashes
+    gsa --help                      # Show this help
+
+REQUIREMENTS:
+    • git
+    • fzf (fuzzy finder)
+    • pbcopy (macOS) or xclip (Linux) for clipboard functionality
+EOF
+        return 0
+    fi
+    
     # Beautiful interactive git stash apply browser
     local stashes
     stashes=$(git stash list --pretty=format:"%C(auto)%gd %C(blue)%cr %C(reset)%s" | fzf --ansi --reverse \

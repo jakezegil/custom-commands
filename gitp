@@ -1,9 +1,36 @@
 #!/bin/bash
 
-# Git push with automatic upstream setting and PR prompt
-# Pushes current branch and sets upstream if not already set, then prompts to open PR
+# gitp - Git push with automatic upstream and PR prompt
 
-git push --set-upstream origin $(git branch --show-current)
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    cat <<'EOF'
+gitp - Push current branch and prompt to open a pull request
+
+USAGE:
+    gitp [--help|-h]
+
+DESCRIPTION:
+    Pushes the current branch to origin with --set-upstream if needed,
+    then prompts to open a pull request in your browser.
+
+FEATURES:
+    • Automatic upstream setup for new branches
+    • Interactive prompt to open a PR (uses GitHub CLI if available)
+    • Beautiful, minimal feedback
+
+REQUIREMENTS:
+    • git
+    • GitHub CLI (gh) for best experience (optional)
+
+EXAMPLES:
+    gitp           # Push and prompt for PR
+    gitp --help    # Show this help
+
+EOF
+    exit 0
+fi
+
+git push --set-upstream origin "$(git branch --show-current)"
 
 echo ""
 read -p "Open a pull request? (y/n): " open_pr
