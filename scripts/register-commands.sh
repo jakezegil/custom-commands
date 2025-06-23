@@ -35,13 +35,13 @@ for script in "$SCRIPT_DIR"/*; do
     if [[ -f "$script" ]] && [[ "$(basename "$script")" != "register-commands.sh" ]] && [[ "$(basename "$script")" != "package.json" ]]; then
         script_name="$(basename "$script")"
         
-        # Check if script contains shell functions (has function definitions or completion)
-        if grep -q "^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*(" "$script" || \
-        grep -q "complete\|compdef\|_.*completion" "$script"; then
-            sourceable_scripts+=("$script_name")
-        else
+        # Check if script is a Bash script by shebang
+        if head -n 1 "$script" | grep -q '^#![[:space:]]*/bin/bash'; then
             executable_scripts+=("$script_name")
             chmod +x "$script"
+        else
+            # If not a Bash script, treat as sourceable (e.g., shell functions, completions)
+            sourceable_scripts+=("$script_name")
         fi
     fi
 done

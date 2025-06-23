@@ -1,0 +1,37 @@
+#!/bin/bash
+
+gsa() {
+    # Beautiful interactive git stash apply browser
+    local stashes
+    stashes=$(git stash list --pretty=format:"%C(auto)%gd %C(blue)%cr %C(reset)%s" | fzf --ansi --reverse \
+        --prompt='🎒 Search stashes > ' \
+        --header='Type to fuzzy-search stashes. Enter: preview/apply, Ctrl-/: toggle preview, Ctrl-Y: copy apply command' \
+        --bind='ctrl-/:toggle-preview' \
+        --bind='ctrl-y:execute-silent(echo git stash apply $(echo {} | grep -o "stash@{[0-9]\+}") | pbcopy)+preview:echo "Copied: git stash apply <stash>"' \
+        --preview="echo {} | grep -o 'stash@{[0-9]\+}' | xargs -I % git stash show --color=always --stat %" \
+        --preview-window=right:60%:wrap \
+        --layout=reverse \
+        --tiebreak=begin,index \
+        --exact \
+        --algo=v2 \
+        --bind "enter:accept"
+    )
+    
+    # If user cancelled, exit gracefully
+    if [[ -z "$stashes" ]]; then
+        # UX: No selection, exit quietly
+        return 0
+    fi
+    
+    local selected_stash
+    selected_stash=$(echo "$stashes" | grep -o 'stash@{[0-9]\+}' | head -1)
+    if [[ -z "$selected_stash" ]]; then
+        echo "gsa: Could not parse selected stash" >&2
+        return 1
+    fi
+    
+    # Show preview and confirm before applying
+    echo "Applying $selected_stash..."
+    git stash apply "$selected_stash"
+}
+gsa "$@"

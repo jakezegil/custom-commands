@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # repo-fuzzy-find: Interactive fuzzy file+text search with preview and jump (requires fzf, ripgrep, less)
 # Usage: repo-fuzzy-find
 # - Instantly start searching for a string in the repo.
