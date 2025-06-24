@@ -3,8 +3,8 @@
 # gitp - Git push with automatic upstream and PR prompt
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    if [[ -f "$(dirname "$0")/gitp.help" ]]; then
-        echo -e "$(cat "$(dirname "$0")/gitp.help")"
+    if [[ -f "$(dirname "$(dirname "$0")")/help/gitp.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/gitp.help")"
     else
         echo "Help file not found"
     fi

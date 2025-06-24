@@ -1,11 +1,11 @@
-# Custom Commands - Rules & Patterns
+# Custom Commands – Rules & Patterns
 
-## Command Creation Rules
+## Command Structure
 
 ### File Structure
 Each command requires exactly 2 files:
-1. **Command file** (e.g., `fs`, `ga`) - executable bash script
-2. **Help file** (e.g., `fs.help`, `ga.help`) - formatted help documentation
+1. **Command file** (e.g., `commands/fs`, `commands/ga`) - executable bash script in `commands/` directory
+2. **Help file** (e.g., `help/fs.help`, `help/ga.help`) - formatted help documentation in `help/` directory
 
 ### Command File Requirements
 
@@ -21,9 +21,9 @@ Each command requires exactly 2 files:
 #### 2. Help Flag Handling
 Always include this exact pattern:
 ```bash
-if [[ "$1" == "-h" || "$1" == "--help" ]]       ; then
-if [[ -f "$(dirname "$0")/COMMAND.help" ]]      ; then
-echo -e "$(cat "$(dirname "$0")/COMMAND.help")"
+if [[ "$1" == "-h" || "$1" == "--help" ]]                         ; then
+if [[ -f "$(dirname "$(dirname "$0")")/help/COMMAND.help" ]]      ; then
+echo -e "$(cat "$(dirname "$(dirname "$0")")/help/COMMAND.help")"
 else
 echo "Help file not found"
 fi
@@ -87,9 +87,10 @@ Detailed explanation of what the command does.
 
 #### Automatic Discovery
 The `register-commands.sh` script automatically:
-- Discovers command files in the root directory
+- Discovers command files in the `commands/` directory
 - Makes bash scripts executable
-- Sources non-bash files (for shell functions)
+- Sources non-bash files from root (for shell functions)
+- Adds `commands/` directory to PATH
 - Updates shell profile with sourcing statements
 
 #### Command Types

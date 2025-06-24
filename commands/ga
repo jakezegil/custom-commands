@@ -11,8 +11,8 @@ if ! command -v git &> /dev/null; then
 fi
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    if [[ -f "$(dirname "$0")/ga.help" ]]; then
-        echo -e "$(cat "$(dirname "$0")/ga.help")"
+    if [[ -f "$(dirname "$(dirname "$0")")/help/ga.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/ga.help")"
     else
         echo "Help file not found"
     fi

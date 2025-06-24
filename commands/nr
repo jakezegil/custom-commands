@@ -46,8 +46,8 @@ fi
 
 # Show help documentation
 _nr_help() {
-    if [[ -f "$(dirname "${BASH_SOURCE[0]}")/nr.help" ]]; then
-        echo -e "$(cat "$(dirname "${BASH_SOURCE[0]}")/nr.help")"
+    if [[ -f "$(dirname "$(dirname "${BASH_SOURCE[0]}")")/help/nr.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "${BASH_SOURCE[0]}")")/help/nr.help")"
     else
         echo "Help file not found"
     fi

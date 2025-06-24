@@ -5,8 +5,8 @@
 # Stages all changes, commits with the given message, pushes, and prompts for PR.
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    if [[ -f "$(dirname "$0")/gap.help" ]]; then
-        echo -e "$(cat "$(dirname "$0")/gap.help")"
+    if [[ -f "$(dirname "$(dirname "$0")")/help/gap.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/gap.help")"
     else
         echo "Help file not found"
     fi

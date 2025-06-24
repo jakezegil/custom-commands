@@ -3,8 +3,8 @@
 gsa() {
     # Handle help flags
     if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-        if [[ -f "$(dirname "$0")/gsa.help" ]]; then
-            echo -e "$(cat "$(dirname "$0")/gsa.help")"
+        if [[ -f "$(dirname "$(dirname "$0")")/help/gsa.help" ]]; then
+            echo -e "$(cat "$(dirname "$(dirname "$0")")/help/gsa.help")"
         else
             echo "Help file not found"
         fi

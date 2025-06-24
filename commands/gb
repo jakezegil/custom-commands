@@ -4,8 +4,8 @@
 # Creates new branch with conventional naming: type/jake/name or type/jake/uuid
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    if [[ -f "$(dirname "$0")/gb.help" ]]; then
-        echo -e "$(cat "$(dirname "$0")/gb.help")"
+    if [[ -f "$(dirname "$(dirname "$0")")/help/gb.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/gb.help")"
     else
         echo "Help file not found"
     fi

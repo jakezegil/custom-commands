@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    if [[ -f "$(dirname "$0")/gbc.help" ]]; then
-        echo -e "$(cat "$(dirname "$0")/gbc.help")"
+    if [[ -f "$(dirname "$(dirname "$0")")/help/gbc.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/gbc.help")"
     else
         echo "Help file not found"
     fi
