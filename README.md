@@ -64,3 +64,26 @@ source ~/.zshrc       # or restart terminal
 ```
 
 All commands support `--help` for details.
+
+## Configuration
+
+Customize commands by creating your personal config:
+
+```bash
+cp config.example.json config.json
+```
+
+Edit `config.json` to set your preferences:
+
+```json
+{
+  "user": {
+    "name": "your-username"
+  },
+  "git": {
+    "branchTypes": ["fix", "feat", "nit"]
+  }
+}
+```
+
+**Note:** `config.json` is gitignored to keep your personal settings private.

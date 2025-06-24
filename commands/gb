@@ -1,7 +1,13 @@
 #!/bin/bash
 
 # Git branch creator with type selection
-# Creates new branch with conventional naming: type/jake/name or type/jake/uuid
+# Creates new branch with conventional naming: type/user/name or type/user/uuid
+
+# Load config utilities
+source "$(dirname "$(dirname "$0")")/scripts/config-utils.sh"
+
+# Get username from config
+username=$(get_username)
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     if [[ -f "$(dirname "$(dirname "$0")")/help/gb.help" ]]; then
@@ -35,6 +41,6 @@ else
     name=$(echo "$name" | tr ' ' '-')
 fi
 
-branch_name="jake/${type}/${name}"
+branch_name="${username}/${type}/${name}"
 git checkout -b "$branch_name"
 echo "Created and switched to branch: $branch_name"

@@ -1,0 +1,8 @@
+{
+  "user": {
+    "name": "your-username"
+  },
+  "git": {
+    "branchTypes": ["fix", "feat", "nit"]
+  }
+}

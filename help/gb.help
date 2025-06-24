@@ -7,7 +7,7 @@ gb -h
 \033[1;34mDESCRIPTION:\033[0m
 Interactive tool for creating new git branches with conventional naming
 patterns. Prompts for branch type and name, creating branches in the
-format: jake/<type>/<name>
+format: <user>/<type>/<name> (user configurable via config.json)
 
 \033[1;34mBRANCH TYPES:\033[0m
 1. fix For bug fixes
@@ -15,9 +15,9 @@ format: jake/<type>/<name>
 3. nit For small improvements/nitpicks
 
 \033[1;34mNAMING PATTERNS:\033[0m
-jake/fix/user-auth-bug Named branch
-jake/feat/new-dashboard Named branch
-jake/nit/a1b2c3d4 Auto-generated UUID
+<user>/fix/user-auth-bug Named branch
+<user>/feat/new-dashboard Named branch
+<user>/nit/a1b2c3d4 Auto-generated UUID
 
 \033[1;34mEXAMPLES:\033[0m
 \033[1;33mgb\033[0m Start interactive branch creation
@@ -27,6 +27,15 @@ jake/nit/a1b2c3d4 Auto-generated UUID
 • Automatic name generation if none provided
 • Consistent naming convention
 • Automatic checkout to new branch
+
+\033[1;34mCONFIGURATION:\033[0m
+Copy config.example.json to config.json and customize:
+cp config.example.json config.json
+
+Edit config.json to set your username:
+{
+"user": { "name": "your-username" }
+}
 
 \033[1;34mREQUIREMENTS:\033[0m
 • git
