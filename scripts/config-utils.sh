@@ -49,3 +49,22 @@ get_branch_types() {
     
     echo "$types"
 }
+
+# Generic function to get any config value using jq
+get_config_value() {
+    local key="$1"
+    local config_file="$(get_config_dir)/config.json"
+    
+    if [[ ! -f "$config_file" ]]; then
+        echo ""
+        return 1
+    fi
+    
+    # Check if jq is available
+    if command -v jq &> /dev/null; then
+        jq -r ".$key // empty" "$config_file" 2>/dev/null
+    else
+        echo ""
+        return 1
+    fi
+}

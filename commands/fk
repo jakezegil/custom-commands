@@ -1,0 +1,202 @@
+#!/bin/bash
+
+command="fk"
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$(dirname "$0")")/help/$command.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/$command.help")"
+    else
+        echo "Help file not found"
+    fi
+    exit 0
+fi
+
+# Source config utilities
+source "$(dirname "$(dirname "$0")")/scripts/config-utils.sh"
+
+# Load OpenRouter API key from config
+OPENROUTER_API_KEY=$(get_config_value "openrouter.apiKey")
+OPENROUTER_MODEL=$(get_config_value "openrouter.model")
+
+if [[ -z "$OPENROUTER_API_KEY" || "$OPENROUTER_API_KEY" == "YOUR_OPENROUTER_API_KEY_HERE" ]]; then
+    echo -e "\033[31mError: OpenRouter API key not configured\033[0m"
+    echo "Please add your OpenRouter API key to config.json:"
+    echo '  "openrouter": {'
+    echo '    "apiKey": "your-actual-api-key"'
+    echo '  }'
+    exit 1
+fi
+
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo -e "\033[31mError: jq is required but not installed\033[0m"
+    echo "Install with: brew install jq"
+    exit 1
+fi
+
+# Parse arguments
+FILES=()
+EXCLUDE_HISTORY=false
+EXCLUDE_DIRECTORY=false
+USER_REQUEST=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --no-history)
+            EXCLUDE_HISTORY=true
+            shift
+            ;;
+        --no-dir)
+            EXCLUDE_DIRECTORY=true
+            shift
+            ;;
+        -f|--file)
+            if [[ -n "$2" && ! "$2" =~ ^- ]]; then
+                FILES+=("$2")
+                shift 2
+            else
+                echo "Error: -f/--file requires a filename"
+                exit 1
+            fi
+            ;;
+        *)
+            # Everything else is part of the user request
+            if [[ -z "$USER_REQUEST" ]]; then
+                USER_REQUEST="$1"
+            else
+                USER_REQUEST="$USER_REQUEST $1"
+            fi
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "$USER_REQUEST" ]]; then
+    echo "Usage: $command [options] <description of what you want to do>"
+    echo "Options:"
+    echo "  -f, --file <file>    Include file content as context (can use multiple times)"
+    echo "  --no-history         Exclude terminal history from context"
+    echo "  --no-dir            Exclude directory listing from context"
+    echo "Example: $command -f script.js -f package.json update the build command"
+    exit 1
+fi
+
+# Get current directory for context
+CURRENT_DIR=$(pwd)
+CURRENT_DIR_NAME=$(basename "$CURRENT_DIR")
+
+# Build context information
+CONTEXT=""
+
+# Add directory listing unless excluded
+if [[ "$EXCLUDE_DIRECTORY" == false ]]; then
+    DIR_LISTING=$(ls -la 2>/dev/null | head -20)
+    CONTEXT="${CONTEXT}Current directory listing (first 20 items):
+\`\`\`
+$DIR_LISTING
+\`\`\`
+
+"
+fi
+
+# Add recent terminal history unless excluded
+if [[ "$EXCLUDE_HISTORY" == false ]]; then
+    # Get last 10 commands from history (excluding this command)
+    if [[ -n "$ZSH_VERSION" ]]; then
+        HISTORY_CMDS=$(fc -l -10 2>/dev/null | head -9 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
+    elif [[ -n "$BASH_VERSION" ]]; then
+        HISTORY_CMDS=$(history 10 | head -9 | sed 's/^[[:space:]]*[0-9]*[[:space:]]*//')
+    else
+        HISTORY_CMDS=""
+    fi
+    
+    if [[ -n "$HISTORY_CMDS" ]]; then
+        CONTEXT="${CONTEXT}Recent terminal commands:
+\`\`\`
+$HISTORY_CMDS
+\`\`\`
+
+"
+    fi
+fi
+
+# Add file contents
+for FILE in "${FILES[@]}"; do
+    if [[ -f "$FILE" ]]; then
+        # Get file extension for syntax highlighting hint
+        EXT="${FILE##*.}"
+        # Limit file content to first 100 lines to avoid token limits
+        FILE_CONTENT=$(head -100 "$FILE" 2>/dev/null)
+        if [[ -n "$FILE_CONTENT" ]]; then
+            CONTEXT="${CONTEXT}Content of $FILE:
+\`\`\`$EXT
+$FILE_CONTENT
+\`\`\`
+
+"
+        fi
+    else
+        echo "Warning: File not found: $FILE" >&2
+    fi
+done
+
+# Create the prompt
+PROMPT="You are a command line assistant. The user wants to: \"$USER_REQUEST\"
+
+Current directory: $CURRENT_DIR
+Current directory name: $CURRENT_DIR_NAME
+
+$CONTEXT
+
+Generate ONLY the exact command line command(s) that will accomplish what the user wants.
+- Output only the command, no explanations or markdown
+- If multiple commands are needed, separate them with && or ;
+- Use appropriate flags and options for the user's system (macOS/Linux)
+- Consider the context provided (files, directory listing, recent commands) when generating commands
+- Prefer simple, idiomatic commands over complex ones"
+
+# Prepare the API request
+REQUEST_BODY=$(jq -n \
+    --arg model "$OPENROUTER_MODEL" \
+    --arg prompt "$PROMPT" \
+    '{
+    "model": $model,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a command line expert. Output only the exact command(s) needed, no explanations. Use the provided context to generate more accurate commands."
+      },
+      {
+        "role": "user",
+        "content": $prompt
+      }
+    ],
+    "temperature": 0.3
+}')
+
+# Call OpenRouter API
+RESPONSE=$(curl -s -X POST https://openrouter.ai/api/v1/chat/completions \
+    -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+    -H "Content-Type: application/json" \
+    -H "HTTP-Referer: https://github.com/jake/custom-commands" \
+    -H "X-Title: Custom Commands AI" \
+-d "$REQUEST_BODY")
+
+# Check for API errors
+if echo "$RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+    ERROR_MSG=$(echo "$RESPONSE" | jq -r '.error.message // .error')
+    echo -e "\033[31mAPI Error: $ERROR_MSG\033[0m"
+    exit 1
+fi
+
+# Extract the command from the response
+COMMAND=$(echo "$RESPONSE" | jq -r '.choices[0].message.content' 2>/dev/null)
+
+if [[ -z "$COMMAND" || "$COMMAND" == "null" ]]; then
+    echo -e "\033[31mError: Failed to generate command\033[0m"
+    echo "Response: $RESPONSE"
+    exit 1
+fi
+
+# Output just the command for the shell function to handle
+echo "$COMMAND"

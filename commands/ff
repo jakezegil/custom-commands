@@ -1,0 +1,109 @@
+#!/bin/bash
+
+command="ff"
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$(dirname "$0")")/help/$command.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/$command.help")"
+    else
+        echo "Help file not found"
+    fi
+    exit 0
+fi
+
+# Source config utilities
+source "$(dirname "$(dirname "$0")")/scripts/config-utils.sh"
+
+# Load OpenRouter API key from config
+OPENROUTER_API_KEY=$(get_config_value "openrouter.apiKey")
+OPENROUTER_MODEL=$(get_config_value "openrouter.model")
+
+if [[ -z "$OPENROUTER_API_KEY" || "$OPENROUTER_API_KEY" == "YOUR_OPENROUTER_API_KEY_HERE" ]]; then
+    echo -e "\033[31mError: OpenRouter API key not configured\033[0m"
+    echo "Please add your OpenRouter API key to config.json:"
+    echo '  "openrouter": {'
+    echo '    "apiKey": "your-actual-api-key"'
+    echo '  }'
+    exit 1
+fi
+
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo -e "\033[31mError: jq is required but not installed\033[0m"
+    echo "Install with: brew install jq"
+    exit 1
+fi
+
+# Check if arguments provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $command <description of what you want to do>"
+    echo "Example: $command list all python files recursively"
+    exit 1
+fi
+
+# Combine all arguments into the user's request
+USER_REQUEST="$*"
+
+# Get current directory for context
+CURRENT_DIR=$(pwd)
+CURRENT_DIR_NAME=$(basename "$CURRENT_DIR")
+
+# Create the prompt
+PROMPT="You are a command line assistant. The user wants to: \"$USER_REQUEST\"
+
+Current directory: $CURRENT_DIR
+Current directory name: $CURRENT_DIR_NAME
+
+Generate ONLY the exact command line command(s) that will accomplish what the user wants.
+- Output only the command, no explanations or markdown
+- If multiple commands are needed, separate them with && or ;
+- Use appropriate flags and options for the user's system (macOS/Linux)
+- Prefer simple, idiomatic commands over complex ones"
+
+# Prepare the API request
+REQUEST_BODY=$(jq -n \
+    --arg model "$OPENROUTER_MODEL" \
+    --arg prompt "$PROMPT" \
+    '{
+    "model": $model,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a command line expert. Output only the exact command(s) needed, no explanations."
+      },
+      {
+        "role": "user",
+        "content": $prompt
+      }
+    ],
+    "temperature": 0.3
+}')
+
+# Call OpenRouter API
+RESPONSE=$(curl -s -X POST https://openrouter.ai/api/v1/chat/completions \
+    -H "Authorization: Bearer $OPENROUTER_API_KEY" \
+    -H "Content-Type: application/json" \
+    -H "HTTP-Referer: https://github.com/jake/custom-commands" \
+    -H "X-Title: Custom Commands AI" \
+-d "$REQUEST_BODY")
+
+# Check for API errors
+if echo "$RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+    ERROR_MSG=$(echo "$RESPONSE" | jq -r '.error.message // .error')
+    echo -e "\033[31mAPI Error: $ERROR_MSG\033[0m"
+    exit 1
+fi
+
+# Extract the command from the response
+COMMAND=$(echo "$RESPONSE" | jq -r '.choices[0].message.content' 2>/dev/null)
+
+if [[ -z "$COMMAND" || "$COMMAND" == "null" ]]; then
+    echo -e "\033[31mError: Failed to generate command\033[0m"
+    echo "Response: $RESPONSE"
+    exit 1
+fi
+
+# Since we're running as a subprocess, we can't directly modify the parent shell's input buffer
+# The best approach is to output just the command so it can be used with command substitution
+# Users can create an alias or function like: alias fff='print -z $(ff "$@")'
+echo "$COMMAND"

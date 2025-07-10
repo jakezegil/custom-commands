@@ -1,0 +1,41 @@
+\033[1m\033[36mff - Fast command generator with AI\033[0m
+
+\033[1mDESCRIPTION:\033[0m
+  Uses OpenRouter AI to generate command line commands from natural language.
+  The generated command is pre-filled in your terminal input for editing.
+
+\033[1mUSAGE:\033[0m
+  ff <description of what you want to do>
+
+\033[1mEXAMPLES:\033[0m
+  ff list all python files recursively
+  ff find files modified in the last 24 hours
+  ff compress all images in current directory
+  ff show disk usage sorted by size
+  ff kill process using port 3000
+
+\033[1mFEATURES:\033[0m
+  • Natural language to command translation
+  • Context-aware (knows current directory)
+  • Pre-fills command in terminal (zsh: directly, bash: via history)
+  • Edit before executing by pressing Enter
+  • Uses OpenRouter API with configurable model
+
+\033[1mCONFIGURATION:\033[0m
+  Requires OpenRouter API key in config.json:
+    {
+      "openrouter": {
+        "apiKey": "your-api-key-here"
+      }
+    }
+
+  Get your API key at: https://openrouter.ai/keys
+
+\033[1mOPTIONS:\033[0m
+  -h, --help    Show this help message
+
+\033[1mNOTES:\033[0m
+  • In zsh: Command appears directly in input buffer
+  • In bash: Command saved to history, press ↑ to use
+  • Edit the command as needed before pressing Enter
+  • Model can be configured in config.json

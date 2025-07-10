@@ -10,22 +10,33 @@ npm run register && source ~/.zshrc
 
 ## Commands
 
-| Command | Purpose                    |
-| ------- | -------------------------- |
-| `fs`    | Fuzzy file+text search     |
-| `ga`    | Git add with feedback      |
-| `gap`   | Stage, commit, push + PR   |
-| `gb`    | Interactive branch creator |
-| `gbc`   | Show current branch        |
-| `gcm`   | Git commit with message    |
-| `gitp`  | Push with upstream + PR    |
-| `glog`  | Interactive git log        |
-| `gsa`   | Interactive stash browser  |
-| `nr`    | npm run with completion    |
+| Command | Purpose                       |
+| ------- | ----------------------------- |
+| `ff`    | Fast AI command generator     |
+| `fk`    | Context-aware AI commands     |
+| `fs`    | Fuzzy file+text search        |
+| `ga`    | Git add with feedback         |
+| `gap`   | Stage, commit, push + PR      |
+| `gb`    | Interactive branch creator    |
+| `gbc`   | Show current branch           |
+| `gcm`   | Git commit with message       |
+| `gitp`  | Push with upstream + PR       |
+| `glog`  | Interactive git log           |
+| `gsa`   | Interactive stash browser     |
+| `nr`    | npm run with completion       |
 
 ## Usage
 
 ```bash
+# AI Assistant
+ff list all python files      # Pre-fills: find . -name "*.py"
+ff find large files           # Pre-fills command in terminal
+
+# Context-Aware AI
+fk update npm script          # Uses directory + history context
+fk -f package.json add test   # Include specific file context
+fk -f src/app.js fix port     # Analyze code for better suggestions
+
 # Search
 fs                    # Interactive file+text search
 
@@ -80,9 +91,7 @@ Edit `config.json` to set your preferences:
   "user": {
     "name": "your-username"
   },
-  "git": {
-    "branchTypes": ["fix", "feat", "nit"]
-  }
+...
 }
 ```
 

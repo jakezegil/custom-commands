@@ -4,5 +4,9 @@
   },
   "git": {
     "branchTypes": ["fix", "feat", "nit"]
+  },
+  "openrouter": {
+    "apiKey": "YOUR_OPENROUTER_API_KEY_HERE",
+    "model": "google/gemini-2.5-flash"
   }
 }

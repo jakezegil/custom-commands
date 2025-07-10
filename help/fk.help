@@ -1,0 +1,49 @@
+\033[1m\033[36mfk - Context-aware AI command generator\033[0m
+
+\033[1mDESCRIPTION:\033[0m
+  Like ff, but with context awareness. Automatically includes directory listing
+  and terminal history. Can also load specific files for better suggestions.
+
+\033[1mUSAGE:\033[0m
+  fk [options] <description of what you want to do>
+
+\033[1mOPTIONS:\033[0m
+  -f, --file <file>    Include file content as context (repeatable)
+  --no-history         Exclude terminal history from context
+  --no-dir            Exclude directory listing from context
+  -h, --help          Show this help message
+
+\033[1mEXAMPLES:\033[0m
+  fk update the npm script                    # Uses dir + history context
+  fk -f package.json add a test script        # Include package.json
+  fk -f src/app.js -f .env fix the port      # Multiple files
+  fk --no-history clean up these files        # Exclude command history
+  fk --no-dir --no-history simple command     # Minimal context
+
+\033[1mFEATURES:\033[0m
+  • All features from ff command
+  • Automatic directory listing context (ls -la)
+  • Recent terminal history (last 10 commands)
+  • File content loading with -f flag
+  • Smart context-aware suggestions
+
+\033[1mCONTEXT INCLUDED:\033[0m
+  • Current directory listing (first 20 items)
+  • Last 10 terminal commands
+  • Any files specified with -f flag
+  • Current working directory path
+
+\033[1mCONFIGURATION:\033[0m
+  Uses same OpenRouter config as ff command:
+    {
+      "openrouter": {
+        "apiKey": "your-api-key-here",
+        "model": "your-preferred-model"
+      }
+    }
+
+\033[1mNOTES:\033[0m
+  • File contents limited to first 100 lines each
+  • Large contexts may increase response time
+  • In zsh: Command appears directly in input buffer
+  • In bash: Command saved to history, press ↑ to use
