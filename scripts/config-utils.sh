@@ -50,6 +50,39 @@ get_branch_types() {
     echo "$types"
 }
 
+# Read git worktree types from config, fallback to branch types or defaults
+get_worktree_types() {
+    local config_file="$(get_config_dir)/config.json"
+    local types=""
+    
+    if [[ -f "$config_file" ]]; then
+        # Check if jq is available for proper JSON parsing
+        if command -v jq &> /dev/null; then
+            # Try to get worktreeTypes using jq
+            local json_types=$(jq -r '.git.worktreeTypes[]? // empty' "$config_file" 2>/dev/null | tr '\n' ' ')
+            if [[ -n "$json_types" ]]; then
+                types="$json_types"
+            else
+                # Fallback to branchTypes using jq
+                json_types=$(jq -r '.git.branchTypes[]? // empty' "$config_file" 2>/dev/null | tr '\n' ' ')
+                if [[ -n "$json_types" ]]; then
+                    types="$json_types"
+                fi
+            fi
+        else
+            # Fallback to basic parsing for branchTypes only (more reliable)
+            types=$(get_branch_types)
+        fi
+    fi
+    
+    # Default if nothing found
+    if [[ -z "$types" ]]; then
+        types="fix feat nit"
+    fi
+    
+    echo "$types"
+}
+
 # Generic function to get any config value using jq
 get_config_value() {
     local key="$1"

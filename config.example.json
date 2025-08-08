@@ -3,7 +3,8 @@
     "name": "your-username"
   },
   "git": {
-    "branchTypes": ["fix", "feat", "nit"]
+    "branchTypes": ["fix", "feat", "nit"],
+    "worktreeTypes": ["fix", "feat", "nit", "experiment", "hotfix"]
   },
   "openrouter": {
     "apiKey": "YOUR_OPENROUTER_API_KEY_HERE",

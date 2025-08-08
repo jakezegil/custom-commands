@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Show current git worktree information
+# Displays the current worktree path, branch, and status
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ -f "$(dirname "$(dirname "$0")")/help/wtc.help" ]]; then
+        echo -e "$(cat "$(dirname "$(dirname "$0")")/help/wtc.help")"
+    else
+        echo -e "\033[1;36mwtc - Show Current Worktree\033[0m"
+        echo ""
+        echo "Shows information about the current git worktree"
+        echo ""
+        echo "Usage: wtc"
+    fi
+    exit 0
+fi
+
+# Get current directory
+current_dir=$(pwd)
+
+# Check if we're in a git repository
+if ! git rev-parse --git-dir &>/dev/null; then
+    echo "Not in a git repository"
+    exit 1
+fi
+
+# Get the actual worktree root (in case we're in a subdirectory)
+worktree_root=$(git rev-parse --show-toplevel 2>/dev/null)
+
+# Get current branch
+current_branch=$(git branch --show-current 2>/dev/null)
+
+# Get current commit
+current_commit=$(git rev-parse --short HEAD 2>/dev/null)
+
+# Check if this is the main worktree
+git_dir=$(git rev-parse --git-dir 2>/dev/null)
+is_main=false
+if [[ "$git_dir" == ".git" ]] || [[ "$git_dir" == *"/.git" ]]; then
+    is_main=true
+fi
+
+# Display current worktree info
+echo -e "\033[1;36mCurrent Worktree:\033[0m"
+echo ""
+
+if [[ "$is_main" == true ]]; then
+    echo -e "\033[1;32m● $(basename "$worktree_root")\033[0m (main)"
+else
+    echo -e "\033[1;34m● $(basename "$worktree_root")\033[0m"
+fi
+
+echo "  Path: $worktree_root"
+
+if [[ -n "$current_branch" ]]; then
+    echo "  Branch: $current_branch"
+else
+    echo "  Branch: (detached HEAD)"
+fi
+
+echo "  Commit: $current_commit"
+
+# Show git status summary
+modified=$(git status --porcelain 2>/dev/null | grep -c "^ M")
+staged=$(git status --porcelain 2>/dev/null | grep -c "^M")
+untracked=$(git status --porcelain 2>/dev/null | grep -c "^??")
+
+if [[ $modified -gt 0 ]] || [[ $staged -gt 0 ]] || [[ $untracked -gt 0 ]]; then
+    echo ""
+    echo "  Status:"
+    [[ $staged -gt 0 ]] && echo "    • $staged staged"
+    [[ $modified -gt 0 ]] && echo "    • $modified modified"
+    [[ $untracked -gt 0 ]] && echo "    • $untracked untracked"
+else
+    echo "  Status: clean"
+fi
+
+# Show relationship to other worktrees
+echo ""
+worktree_count=$(git worktree list | wc -l | tr -d ' ')
+if [[ $worktree_count -gt 1 ]]; then
+    other_count=$((worktree_count - 1))
+    echo "  Other worktrees: $other_count"
+    echo "  Run 'wt ls' to see all worktrees"
+fi

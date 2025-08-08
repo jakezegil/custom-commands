@@ -1,0 +1,45 @@
+\033[1;36mwt - Git Worktree Manager with Cursor Integration\033[0m
+
+\033[1mUSAGE:\033[0m
+  wt              Create a new worktree and open in Cursor
+  wt ls           List all worktrees
+  wt rm           Remove an existing worktree
+  wt --help       Show this help
+
+\033[1mDESCRIPTION:\033[0m
+  Quickly create git worktrees with conventional branch naming
+  and automatically open them in Cursor (or VS Code).
+  
+  Worktrees allow you to have multiple branches checked out
+  simultaneously in different directories.
+
+\033[1mCREATE WORKTREE:\033[0m
+  Running 'wt' will:
+  1. Prompt for branch type (fix/feat/nit/custom)
+  2. Ask for branch name (or generate random)
+  3. Create worktree in ../repo-type-name/
+  4. Open the worktree in Cursor
+
+\033[1mREMOVE WORKTREE:\033[0m
+  Running 'wt rm' will:
+  1. List all existing worktrees
+  2. Let you select one to remove
+  3. Confirm before removal
+  4. Optionally delete the associated branch
+
+\033[1mLIST WORKTREES:\033[0m
+  Running 'wt ls' will:
+  1. Show all worktrees with their paths
+  2. Display the current branch for each
+  3. Show commit hash
+  4. Highlight the main worktree
+
+\033[1mEXAMPLES:\033[0m
+  wt                  # Create new worktree interactively
+  wt ls               # List all worktrees
+  wt rm               # Remove worktree with confirmation
+  
+\033[1mNOTES:\033[0m
+  • Worktrees are created parallel to your main repo
+  • Branch format: username/type/name
+  • Falls back to VS Code if Cursor is not installed

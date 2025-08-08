@@ -1,0 +1,30 @@
+\033[1;36mwtc - Show Current Worktree\033[0m
+
+\033[1mUSAGE:\033[0m
+  wtc             Show current worktree information
+  wtc --help      Show this help
+
+\033[1mDESCRIPTION:\033[0m
+  Displays information about the current git worktree including:
+  • Worktree name and path
+  • Current branch name
+  • Current commit hash
+  • Working directory status
+  • Number of other worktrees
+
+\033[1mEXAMPLE OUTPUT:\033[0m
+  Current Worktree:
+  
+  ● custom-commands (main)
+    Path: /Users/jake/custom-commands
+    Branch: main
+    Commit: afd75e8
+    Status: clean
+    
+    Other worktrees: 2
+    Run 'wt ls' to see all worktrees
+
+\033[1mNOTES:\033[0m
+  • Main worktree is shown in green
+  • Other worktrees are shown in blue
+  • Shows file status summary if there are changes

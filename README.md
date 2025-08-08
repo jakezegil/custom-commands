@@ -24,6 +24,8 @@ npm run register && source ~/.zshrc
 | `glog`  | Interactive git log           |
 | `gsa`   | Interactive stash browser     |
 | `nr`    | npm run with completion       |
+| `wt`    | Git worktree manager + Cursor |
+| `wtc`   | Show current worktree info    |
 
 ## Usage
 
@@ -53,6 +55,12 @@ gsa                   # Interactive browser for git stashes
 # Node.js
 nr                    # List available scripts
 nr build              # Run script with completion
+
+# Worktrees
+wt                    # Create worktree + open in Cursor
+wt ls                 # List all worktrees
+wt rm                 # Remove worktree (with confirmation)
+wtc                   # Show current worktree info
 ```
 
 ## Installation
